@@ -43,7 +43,8 @@ bool McFileSlicing::fileSlicing(const QString &inFilePath, const QString &outFil
 	}
 	else {
 		mp4FilePath = outFileInfo.absolutePath() + "/" + outFileBaseName + ".mp4";
-		if (0 != QProcess::execute(QString("ffmpeg1 -i %1 -acodec libfaac -vcodec libx264 %2").arg(inFilePath, mp4FilePath)))
+		/*if (0 != QProcess::execute(QString("ffmpeg1 -i %1 -acodec libfaac -vcodec libx264 %2").arg(inFilePath, mp4FilePath)))*/
+		if (0 != QProcess::execute(QString("ffmpeg1 -i %1 -y -c:v libx264 -strict -2 %2").arg(inFilePath, mp4FilePath)))
 			return false;
 	}
 	QString tsFilePath = outFileInfo.absolutePath() + "/" + outFileBaseName + ".ts";
