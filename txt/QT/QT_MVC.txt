@@ -1,0 +1,19 @@
+// QAbstractItemView::setModel
+The view does not take ownership of the model unless it is the model's parent object because the model may be shared between many different views.
+由于model可能会在其他view中共享，所以，view删除时并不会删除model，model只会跟随它的父类删除
+如果该view之前拥有一个model，那么当调用该函数时并不会删除model，需要手动删除
+
+
+// QAbstractItemView::setItemDelegate
+Any existing delegate will be removed, but not deleted. QAbstractItemView does not take ownership of delegate.
+同model，view不会拥有delegate的所有权，并且会移除之前所有设置过的delegate，但仍然不会删除
+Warning：一个view可以拥有多个delegate，但一个delegate只能同时存在于一个view中
+
+
+// QAbstractItemModel rowCount和columnCount
+如果继承至ListModel，columnCount可以不实现，因为列表只有一列，ListModel已经默认实现过
+如果继承至TableModel，实现rowCount和columnCount时需要注意：
+	When implementing a table based model, rowCount()/columnCount() should return 0 when the parent is valid.
+	如果参数QModelIndex有效的话，需要返回0，否则返回实际定义的值
+	
+	

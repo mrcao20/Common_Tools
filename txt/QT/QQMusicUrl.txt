@@ -1,0 +1,57 @@
+歌曲vkey(true)
+https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg?g_tk=1109981464&loginUin=839566521&hostUin=0&format=json&inCharset=utf8&outCharset
+=utf-8&notice=0&platform=yqq&needNewCode=0&cid=205361747&uin=839566521&songmid=0008wYUz3bbhc0&filename=C4000008wYUz3bbhc0.m4a&guid=2054016189
+（播放列表F12，Network选项卡Ctrl+R，fcg_music_express_mobile3.fcg文件下）
+
+歌曲文件(true)
+http://dl.stream.qqmusic.qq.com/C400004A6nxz3lfUsM.m4a?vkey=5486CE9F4BF4563B53EB3D88C8DF9CEED2D26DC4CAD6515C121A8EA5DD2A1908599295B55DDC4C86047A0
+CA9D0A6984F2BDBCD687C9986E0&guid=2054016189&uin=839566521&fromtag=66
+（播放列表F12，Network选项卡Ctrl+R，Size选项卡从小到大排序，type为media的文件）
+
+songmid为https://y.qq.com/n/yqq/song/004c5wWh32ynad.html中的16进制数
+filename为C400+songmid+.m4a
+https://y.qq.com/n/yqq/song/004c5wWh32ynad.html在播单列表源代码
+
+// computer播单
+https://y.qq.com/n/yqq/playlist/3640119869.html#stat=y_new.profile.create_playlist.click&dirid=6
+
+// 获取歌单（获取songmid）
+https://c.y.qq.com/splcloud/fcgi-bin/fcg_musiclist_getinfo_cp.fcg?uin=839566521&dirid=6&new=0&dirinfo=1&user=qqmusic&miniportal=1&fromDir2Diss=1
+&comPic=0&g_tk=217229984&jsonpCallback=jsonCallback&loginUin=839566521&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform
+=yqq&needNewCode=0
+dirid为歌单序号（创建歌单时的顺序）
+
+// 获取所有歌单（获取dirid，tid）
+https://c.y.qq.com/rsc/fcgi-bin/fcg_user_created_diss?hostuin=839566521&sin=0&size=32&r=1527670266621&g_tk=202117865&jsonpCallback=MusicJsonCall
+back27797664440372793&loginUin=839566521&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0
+（referer：https://y.qq.com/portal/profile.html）
+
+
+// 获取歌单（获取songmid, songname）(true)
+https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&disstid=3640119869&format=jsonp&g_tk=2122464954&
+jsonpCallback=playlistinfoCallback&loginUin=839566521&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0
+（播放列表F12，Network选项卡Ctrl+R，JS选项下，fcg_ucc_getcdinfo_byids_cp.fcg内）
+（referer：https://y.qq.com/portal/profile.html）
+请求时，需要设置请求头（referer，user-agent(非必须)），使用时可将format改为json，删除jsonpCallback
+https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&disstid=3640119869&format=json&g_tk=2122464954&
+loginUin=839566521&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0
+disstid为歌单的唯一标识符tid，可通过获取所有歌单获取
+
+
+// 获取歌词（结果base64加密，需解密）
+https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?callback=MusicJsonCallback_lrc&pcachetime=1526475335158&songmid=002yiSpT0UG6j8&g_tk=20
+2117865&jsonpCallback=MusicJsonCallback_lrc&loginUin=839566521&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&need
+NewCode=0
+
+
+// 搜索歌曲(true)
+http://s.music.qq.com/fcgi-bin/music_search_new_platform?t=0&n=%1&aggr=1&cr=1&loginUin=0&format=json&inCharset=GB2312&outCharset=utf-8&notic
+e=0&platform=jqminiframe.json&needNewCode=0&p=%2&catZhida=0&remoteplace=sizer.newclient.next_song&w=%3
+（n：将搜索的歌曲分为每页n首，最多每页三十首，p：歌曲被分解后的第p页，w搜索关键字）（songmid为获取到的f参数的第一个十六进制数，即用|分割后的倒数第5个参数）
+
+// 搜索歌曲(true)新接口
+https://c.y.qq.com/soso/fcgi-bin/client_search_cp?ct=24&qqmusic_ver=1298&new_json=1&remoteplace=txt.yqq.song&searchid=71813867590975010&t=0&aggr=1&
+cr=1&catZhida=1&lossless=0&flag_qc=0&n=%1&p=%2&w=%3&g_tk=5381&jsonpCallback=MusicJsonCallback031135166293541294&loginUin=0&hostUin=0&format=jsonp&
+inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0
+
+

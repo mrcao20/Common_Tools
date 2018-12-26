@@ -1,0 +1,35 @@
+导出dll方法
+创建.def文件，在连接器->输入->模块定义文件加入该.def文件
+在.def文件加入内容
+LIBRARY Hook  // 这一行可以不要，但如果使用，第二个参数(Hook)必须和该文件名一样
+DESCRIPTION "Hook"  // 这一行可以去掉，引号内内容为描述
+EXPORTS    // 导出函数的开始
+SetHook @1;   // 第一个参数为导出函数名，第二个参数为@N;，N为1-N中的数值，为函数编号
+UnSetHook @2;
+SetFunction @3;
+
+如果导出的dll是给c/c++使用，可以直接使用定义的头文件，dll文件和.lib文件，其他语言则必须使用dll文件
+c/c++只需将.lib文件加入附加依赖项然后根据头文件定义的函数使用。或者不使用.lib文件，直接动态加载dll文件
+// 动态加载dll
+HINSTANCE hAddDll = NULL;
+typedef int (WINAPI*AddProc)(int a, int b);//函数原型定义 
+AddProc add;
+if (hAddDll == NULL)
+{
+	hAddDll = ::LoadLibrary(_T("Win32DLL.dll"));//加载dll 
+}
+add = (AddProc)::GetProcAddress(hAddDll, "add");//获取函数add地址 
+
+
+// 关于switch中四个宏的介绍：
+DLL_PROCESS_ATTACH（进程载入）
+DLL_THREAD_ATTACH（线程载入）
+DLL_THREAD_DETACH（线程卸载）
+DLL_PROCESS_DETACH（进程卸载）
+
+
+// 同一进程多次加载Dll
+当在同一进程中多次LoadLibrary同一个dll时，第二次以后的加载只会返回原dll地址，并将其引用计数加一，每Free一次，引用计数减一
+故加载几次则释放几次
+
+

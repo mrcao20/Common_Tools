@@ -1,0 +1,31 @@
+// https://vd.l.qq.com/proxyhttp关键参数platform，sdtfrom，defn(清晰度)=fhd，tm(当前时间)，cKey(算法动态获取)
+{"buid":"onlyvinfo","vinfoparam":"charge=0&defaultfmt=auto&otype=ojson&guid=e47e82b5db21a590b047248ff2a628b8&flowid=fc9f1cd8626df87fb3d43f7e232ff350_
+10201&platform=10201&sdtfrom=v1010&defnpayver=1&appVer=3.5.55&host=v.qq.com&ehost=https%3A%2F%2Fv.qq.com%2Fx%2Fcover%2Fgvz5bapszkkjbw8%2Fj00262bdy2l.
+html&refer=v.qq.com&sphttps=1&tm=1536570780&spwm=4&unid=6f9b101a4ec811e89d19a0429186d00a&vid=j00262bdy2l&defn=fhd&fhdswitch=0&show1080p=1&isHLS=1&
+dtype=3&sphls=2&spgzip=1&dlver=2&defsrc=2&encryptVer=7.7&cKey=23352e4fcf8f45bc2233221e2d942385&fp2p=1"}
+
+
+Cookie: pgv_pvi=4378796032; RK=cM1a+vMvSK; LW_uid=O1k5h0T9B3h7i423e7G5z878f3; pac_uid=1_839566521; tvfe_boss_uuid=58f06ad94fdb153e; LW_sid=t1L5m330a5Z3N7a1e4t1S28466; pt2gguin=o0839566521; ptcz=e775b76914a71cc7890fa080accbe5f058790ef61c74d41cbe8c317a35344b4a; __guid=46216992.839429562800766600.1536113789692.7532; pgv_pvid=2054016189; o_cookie=839566521; _video_qq_version=1.1; _video_qq_appid=wx5ed58254bc0d6b7f; _video_qq_openid=ox8XOvhWqZMNfLmw5oGejBHWyAEQ; _video_qq_vuserid=893145644; _video_qq_refresh_token=13_-2ZXT_8lfmo14VLTkbLwyFstPN47U6F0ebhZi-m9Ny2oe6VXmGJr-P-2u-Tgq2qG5yQVQUYLuiS3QQmt_Ec4FQ; _video_qq_main_login=wx; appid=wx5ed58254bc0d6b7f; openid=ox8XOvhWqZMNfLmw5oGejBHWyAEQ; vuserid=893145644; refresh_token=13_-2ZXT_8lfmo14VLTkbLwyFstPN47U6F0ebhZi-m9Ny2oe6VXmGJr-P-2u-Tgq2qG5yQVQUYLuiS3QQmt_Ec4FQ; main_login=wx; _video_qq_next_refresh_time=6600; next_refresh_time=6600; _video_qq_access_token=13_-2ZXT_8lfmo14VLTkbLwyHNerIIewHZc564sSVF_h30nahDtNkaLijt-62K2kUBn1e7xDoGN0kwcI5E-w0u68A; access_token=13_-2ZXT_8lfmo14VLTkbLwyHNerIIewHZc564sSVF_h30nahDtNkaLijt-62K2kUBn1e7xDoGN0kwcI5E-w0u68A; pgv_info=ssid=s3227628691; monitor_count=2; login_time_last=2018-9-14 11:42:32; _video_qq_vusession=12c7a29cdfdd516465df74611e14; vusession=12c7a29cdfdd516465df74611e14
+header["Host"] = "video.qq.com";
+header["Referer"] = "https://v.qq.com/x/cover/gvz5bapszkkjbw8.html?vid=p0027vwi4wm";
+header["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
+getNetworkData("https://video.qq.com/fcgi-bin/check_login?callback=_jsonp01536894357247&_t=1536894357247" , header);
+
+vinfoparam=charge=1&defaultfmt=auto&otype=ojson&guid=e47e82b5db21a590b047248ff2a628b8&flowid=522ab07f4f5eba900d0f2fe93e653452_10201&platform=
+10201&sdtfrom=v1010&defnpayver=1&appVer=3.5.55&host=v.qq.com&ehost=https%3A%2F%2Fv.qq.com%2Fx%2Fcover%2Fgvz5bapszkkjbw8.html&refer=v.qq.com&
+sphttps=1&tm=1537145839&spwm=4&logintoken=%7B%22openid%22%3A%22ox8XOvhWqZMNfLmw5oGejBHWyAEQ%22%2C%22appid%22%3A%22wx5ed58254bc0d6b7f%22%2C%22
+access_token%22%3A%22038a02da677c2cfc26d03ced4716%22%2C%22vuserid%22%3A%22893145644%22%2C%22vusession%22%3A%229038a02da677c2cfc26d03ced4716%22%2C%22
+main_login%22%3A%22wx%22%7D&unid=6f9b101a4ec811e89d19a0429186d00a&vid=j0026kazyli&defn=sd&fhdswitch=0&show1080p=1&isHLS=1&dtype=3&sphls=2&
+spgzip=1&dlver=2&defsrc=2&encryptVer=7.1&cKey=f5ddf9b55da7375b534f1dfe26396fb3&fp2p=1
+
+logintoken=%7B%22
+appid%22%3A%22wx5ed58254bc0d6b7f%22%2C%22
+openid%22%3A%22ox8XOvhWqZMNfLmw5oGejBHWyAEQ%22%2C%22
+vuserid%22%3A%22893145644%22%2C%22
+main_login%22%3A%22wx%22%7D
+
+
+// 搜索
+https://s.video.qq.com/smartbox?callback=jQuery19103089207096439459_1536575014644&plat=2&ver=0&num=10&otype=json&
+query={视频名}&uid=c26ca586-adbb-4d35-8e6e-b17b6dbe6ac4&_=1536575014655
+

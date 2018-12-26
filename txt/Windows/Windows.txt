@@ -1,0 +1,18 @@
+typedef struct tagMSG{
+	HWND hwnd; //窗口句柄
+	UINT message; //消息类型
+	WPARAM wParam; //附加消息1
+	LPARAM lParam; //附加消息2
+	DWORD time; //消息被传递时候的时间
+	POINT pt; //消息被传递时光标在屏幕上的位置
+} MSG;
+message 为消息类型，也就是以 WM 开头的消息（WM 是 Window Message 的缩写 ），例如 WM_CREATE、WM_PAINT、WM_DESTROY、WM_COMMAND 等
+wParam 和 lParam 是要重点说明的，它们都表示附加消息。例如，当收到一个字符消息的时，message 的值为 WM_CHAR，但用户到底输入的是什么字符，那么就由 wParam 
+和 lParam 来说明。wParam、lParam 表示的信息随消息类型的不同而不同，具体细节可以到MSDN中查看。
+一般约定，wParam 用来表示控件的ID，或者高 16 位和低 16 位组合起来分别表示鼠标的位置，如果发送消息时需要附带某种结构的指针或者是某种类型的句柄时，
+习惯上用 lParam。
+
+
+登录、注销、锁屏、用户切换等会导致 session 改变的操作，系统会发送 WM_WTSSESSION_CHANGE 消息
+
+

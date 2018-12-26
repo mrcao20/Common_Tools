@@ -1,0 +1,92 @@
+// 获取函数入口五个字节和入口前五个字节(API HOOK时使用的是入口处的五个字节)
+BYTE *pfApi = (BYTE *)::GetProcAddress(hInst, szApi);
+pfApi[0], pfApi[1], pfApi[2], pfApi[3], pfApi[4]  // 入口五个字节
+(pfApi - 1)[0], (pfApi - 2)[0], (pfApi - 3)[0], (pfApi - 4)[0], (pfApi - 5)[0]  // 入口前五个字节
+Windows API入口前五个字节均为CC CC CC CC CC(即为空)
+
+
+// int转byte数组(bytes[0]存储低位，bytes[3]存储高位字节)
+void intToByte(int i, byte bytes[], int size = 4){
+	bytes[0] = (byte)(0xff & i);
+	bytes[1] = (byte)((0xff00 & i) >> 8);
+	bytes[2] = (byte)((0xff0000 & i) >> 16);
+	bytes[3] = (byte)((0xff000000 & i) >> 24);
+	return;
+}
+
+
+// byte数组转int
+int bytesToInt(byte* bytes, int size = 4){
+	int addr = bytes[0];
+	addr |= (bytes[1] << 8);
+	addr |= (bytes[2] << 16);
+	addr |= (bytes[3] << 24);
+	return addr;
+}
+
+
+// 十六进制数转int
+int hexToInt(char s[]){
+	int temp = 0, n;
+	size_t m = strlen(s);//十六进制是按字符串传进来的，所以要获得他的长度
+	for (size_t i = 0; i < m; i++)
+	{
+		if (s[i] >= 'A'&&s[i] <= 'F')//十六进制还要判断他是不是在A-F或者a-f之间a=10。。
+			n = s[i] - 'A' + 10;
+		else if (s[i] >= 'a'&&s[i] <= 'f')
+			n = s[i] - 'a' + 10;
+		else n = s[i] - '0';
+		temp = temp * 16 + n;
+	}
+	return temp;
+}
+
+
+// API HOOK时jmp指令跳转的地址值
+int nAddr= UserFunAddr - SysFunAddr - (我们定制的这条指令的大小(5));
+不使用汇编时的计算(FARPROC pfOldFunc)
+(int)newFunc - (int)pfOldFunc - 5(这个算式计算出来的值为int如果使用%x直接输出16进制时，地址值是反过来的，转换为byte数组后即正确)
+0xe9即为jmp指令，但jmp指令只能跳转32位大小，故在64位程序上无法跳转
+2018.9.7更新(不使用汇编复制内存)RtlMoveMemory
+X86：
+	code[0] = 0xe9;
+	DWORD a = (DWORD)MyOpenProcess - (DWORD)addr - 5;
+	RtlMoveMemory(code + 1, &a, 4);
+X64：
+	code[0] = 0x48;
+	code[1] = 0xB8;
+	code[10] = 0x50;
+	code[11] = 0xC3;
+	long long a = (long long)MyOpenProcess;
+	RtlMoveMemory(code + 2, &a, 8);
+
+
+// 加debug权限(使进程权限为调试权限)(可以打开其他进程)
+BOOL EnableDebugPrivilege()
+{
+	HANDLE hToken;
+	LUID Luid;
+	TOKEN_PRIVILEGES tp;
+ 
+	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken))return FALSE;
+ 
+	if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &Luid))
+	{
+		CloseHandle(hToken);
+		return FALSE;
+	}
+ 
+	tp.PrivilegeCount = 1;
+	tp.Privileges[0].Luid = Luid;
+	tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+ 
+	if (!AdjustTokenPrivileges(hToken, false, &tp, sizeof(tp), NULL, NULL))
+	{
+		CloseHandle(hToken);
+		return FALSE;
+	}
+	CloseHandle(hToken);
+	return TRUE;
+}
+
+

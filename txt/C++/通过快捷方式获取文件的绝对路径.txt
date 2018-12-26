@@ -1,0 +1,48 @@
+#include <shobjidl.h>
+#include <shlguid.h>
+#include <tchar.h> 
+#include <windows.h>  
+#include <string>  
+#include <shlobj.h>
+#define  SAFE_RELEASE(p) if(p) p->Release();
+CoInitialize(NULL);
+wchar_t real_path[512];
+IShellLink*   psl = NULL;
+HRESULT       hr;
+hr = CoCreateInstance(
+	CLSID_ShellLink,
+	NULL,
+	CLSCTX_INPROC_SERVER,//建在同一进程中运行的组件
+	IID_IShellLink,
+	(void **)&psl
+);  // 初始化com
+if (SUCCEEDED(hr))
+{
+	IPersistFile*   ppf = NULL;
+
+	hr = psl->QueryInterface(IID_IPersistFile, (void**)&ppf);
+	if (SUCCEEDED(hr))
+	{
+		WIN32_FIND_DATA   wfd;
+
+		hr = ppf->Load(L"C:\\Users\\Public\\Desktop\\QQ音乐.lnk", STGM_READ);
+		//文件名字修改XF为你的快捷方式名字
+
+		if (SUCCEEDED(hr))
+		{
+			psl->GetPath(
+				real_path,
+				MAX_PATH,
+				&wfd,
+				SLGP_SHORTPATH
+			);
+			printf("find file\n");
+			MessageBoxW(NULL, real_path, real_path, 0);
+		}
+		else
+			printf("no this file");
+	}
+
+}
+SAFE_RELEASE(psl);//释放psl
+CoUninitialize(); //卸载com

@@ -1,0 +1,38 @@
+// 文件表示
+当执行文件操作时需要用全路径表示文件，单一的文件名不能表示文件，必须加上全路径才能表示为一个文件，重命名时也需要加上全路径
+无论是QFile、QFileInfo、qApp、QUrl还是其他可以表示文件的对象，fileName函数都只是表示文件名，不包含路径，这时需要使用absoluteFilePath、toLocalFile等函
+数才能表示全路径，QDir的entryList返回的列表只是表示该dir下文件的文件名，需要用dir.absoluteFilePath(file)才能表示文件的全路径
+
+
+// 文件对话框
+QFileDialog::getSaveFileName第三个参数为文件对话框默认打开时的文件夹位置，参数最后一个/后的字符串为默认的文件名
+
+
+// QTextStream
+readLine()和readLineInto(QString *)都能从文件中读取一行文本，当readLineInto中参数容量足够大时，由于系统不会再分配内存，故读取速度会比readLine快，
+所以使用readLineInto之前，对里面参数进行reserve手动分配空间，能提高读取速度。
+使用流操作运算符时：endl（换行），flush（清除缓冲）
+
+
+// QFile
+使用open函数打开文件时
+	QIODevice::ReadWrite 可读写
+	QIODevice::Text 换行符生效
+	QIODevice::Append 追加写入
+	QIODevice::Truncate 表示将原文件清空
+	
+// QFileInfo
+QFileInfo的suffix函数获取的后缀为.后面的字符，不包括.
+
+
+// XML
+SAX：顺序读取，它是一种向前处理，只会将需要处理的文档加载进内存，故可以解析任意大小的文档
+DOM：随机存取，它能够对文档进行任意位置的随机存取，它会将整个XML文档加载进内存，所以它能够处理的文档大小取决于内存大小
+
+
+// QSettings 
+QSettings ::Format有两种:
+	QSettings ::NativeFormat在windows平台可以读写windows注册表.在其他操作系统为读写相应的系统配置文件
+	QSettings ::IniFormat可以读写ini格式的配置文件
+	
+

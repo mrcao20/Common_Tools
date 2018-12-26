@@ -1,0 +1,6 @@
+// std::vector
+当需要使用std::vector来创建数组容器时(std::vector<cv::Mat>)，比如cv::split或cv::findContours等函数，需要预先指定该数组容器的大小
+std::vector<cv::Mat> v(4)或v.reserve(4)，因为这个数组容器为栈对象，需要销毁，而不分配大小时以上函数会去分配大小，内存的位置为本函数不可访问范围，故容
+器析构时会出错(__acrt_first_block == header)
+
+

@@ -1,0 +1,130 @@
+// windows让程序开机自启动
+1、C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp
+2、组策略,开始→运行→输入gpedit.msc。用户配置→管理模板→系统→登录，在右边有个“在用户登录时运行这些程序”
+
+
+// CString转换为string #include <atlstr.h>
+CW2A(CString.GetString())
+
+
+// std::vector
+std::vector中reserve函数只能将小容量容器变成大容量，若原容器为大容器，则调用此函数后容器大小不会改变
+std::vector中resize函数会强制缩放容器大小，但会对容器数据进行初始化
+std::vector中swap函数可以强制缩小原容器大小，(vector<T>().swap(原容器))     // 将原容器置空常用方法
+
+
+// 键盘钩子
+1.大部分按键都可以通过WM_KEYDOWN和WM_KEYUP接收
+2.alt键的按下是用WM_SYSKEYDOWN接收，抬起是用WM_KEYUP接收
+3.WIN键是用WM_KEYDOWN和（WM_KEYUP或WM_SYSKEYUP）接收，但WIN+TAB等组合件是WM_SYSKEYUP接收
+
+
+// 内联函数
+关键字inline 必须与函数定义体放在一起才能使函数成为内联，仅将inline 放在函数声明前面不起任何作用。
+如下风格的函数Foo 不能成为内联函数：
+inline void Foo(int x, int y); // inline 仅与函数声明放在一起
+void Foo(int x, int y){}
+而如下风格的函数Foo 则成为内联函数：
+void Foo(int x, int y);
+inline void Foo(int x, int y) // inline 与函数定义体放在一起{}
+
+内联是以代码膨胀（复制）为代价，仅仅省去了函数调用的开销，从而提高函数的执行效率。如果执行函数体内代码的时间，相比于函数调用的开销较大，那么效率
+的收获会很少。另一方面，每一处内联函数的调用都要复制代码，将使程序的总代码量增大，消耗更多的内存空间。
+
+以下情况不宜使用内联：
+（1）如果函数体内的代码比较长，使用内联将导致内存消耗代价较高。
+（2）如果函数体内出现循环，那么执行函数体内代码的时间要比函数调用的开销大。类的构造函数和析构函数容易让人误解成使用内联更有效。要当心构造函数和析
+构函数可能会隐藏一些行为，如“偷偷地”执行了基类或成员对象的构造函数和析构函数。所以不要随便地将构造函数和析构函数的定义体放在类声明中。一个好的编
+译器将会根据函数的定义体，自动地取消不值得的内联（这进一步说明了 inline 不应该出现在函数的声明中）。
+
+如果函数体代码较为简短，结构简单（仅仅返回一个值或简单运算），则使用内联；若函数体代码较长，结构复杂（如循环）则不能用内联
+
+
+// 顶层const和底层const
+由于指针和指针所指向的对象为两个事物，指针和所指对象只是被关联在一起，两者可以单独使用
+int num_e = 4;
+int num_n = 5;
+const int *p_e = &num_e;		// 指向常量的指针(底层const)
+int *const p_n = &num_n;		// 指针常量(顶层const)
+指向常量的指针表示这个指针所指向的值为常量，但这个值不一定是常量，只是表示不能通过解引用来对该值重新赋值，即*p_e=5为错误用法，但是如果这个值不是
+常量，那就可以通过原始变量进行赋值，即num_e=5为正确用法，但这个指针并不是常量，故指针可以指向另一个对象，即p_e=&num_n为正确用法
+指针常量表示这个指针为常量，故这个指针无法指向其他地址，所以声明时必须初始化，即p_n=&num_e为错误用法，但原始对象是否可以更改只与原始对象是否为常
+量有关
+const int a = 1;    
+//int * pi = &a;  //错误，&a是底层const，不能赋值给非底层const   
+const int * pi = &a; //正确，&a是底层const，可以赋值给底层const  
+const int *const *const ppi = &pi  //既是底层const，也是顶层const  
+const int  *const *const *pppi = &ppi; //底层const  
+（对指针的修饰符只对指针有效，对原始数据无效，原始数据是否可变，只与原始数据的修饰符有关）
+
+
+// 可变长度的参数列表
+#include <cstdarg>
+double sum(unsigned int n, ...) {
+	va_list args;
+	va_start(args, n);
+	for(int i = 0; i < n; ++i){
+		va_arg(args, int);
+	}
+	va_end(args);
+}
+
+
+// 函数指针及函数指针的重命名(typedef)
+函数指针有如下形式
+	QObject *(*constructor)(QObject *)			// 第一个QObject *为该函数的返回值，第二个*为必须值，constructor为函数名，第二个QObject *为参数
+该函数指针表示，可接收的函数类型为QObject *function(QObject *);，即，若存在一个函数为QObject *function(QObject *)，则可以使用constructor=&function
+将function绑定到constructor上，之后可使用constructor代替function调用函数，也可在声明时直接初始化QObject *(*constructor)(QObject *)=&function，与
+上等价
+可以使用typedef将上诉函数指针简化，typedef QObject *(*Constructor)(QObject *)，使用之后Constructor即可表示整个函数指针的声明，即
+Constructor constructor = &function;与上等价
+
+
+// Algorithm
+宽度优先搜索		// 在已知初始状态和结束状态的情况下，求最小操作时使用
+深度优先搜索 		// 给定初始状态跟目标状态，要求判断从初始状态到目标状态是否有解。基于回溯思想，但只需要满足一个解即满足条件而结束
+回溯法				// 要求列举所有情况，或者说所有情况都要探讨一下的例题，一般都可以考虑回溯法
+
+
+// 类型转换
+reinterpret_cast：主要是将数据从一种类型的转换为另一种类型。所谓“通常为操作数的位模式提供较低层的重新解释”也就是说将数据以二进制存在形式的重新解释。
+int i;
+char *p = "Thisisanexample.";
+i = reinterpret_cast<int>(p);
+此时结果，i与p的值是完全相同的。reinterpret_cast的作用是说将指针p的值以二进制（位模式）的方式被解释为整型，并赋给i，//i 为整型；一个明显的现象是在转
+换前后没有数位损失。
+
+static_cast：执行非多态的转换，用于代替C中通常的转换操作。因此，被做为显式类型转换使用
+主要用于编译时的静态向下转换。比如int转换到float时可以直接用等号赋值，这是向上转换，但是float直接向int赋值时会出现精度丢失，此时应使用static_cast进
+行静态转换，将整数部分赋值给int，小数部分舍弃，但也可以int=float，和static_cast结果一致
+
+dynamic_cast：运行时的动态转换，主要用于多态，从一个接口向另一个接口转换，或对象的向下转换，失败返回NULL
+
+qobject_cast：qt对象的运行时动态转换，如果对象继承至QObject则使用该转换，否则只能使用dynamic_cast
+
+
+// 匿名对象
+如果一个对象声明之后没有用任何方式来接收，那么该对象为匿名对象，并在分号执行结束时直接析构该对象
+如果一个函数func返回一个对象：
+	T t;
+	t = func(); // 此时调用赋值运算符，t和函数返回的对象为两个对象
+	T t = func(); // 此时调用拷贝构造函数，t和函数返回的对象为用一个对象
+	// 以上两种形式，对象均用t接收，则此时对象将在}执行之后发生析构
+	func();或T();	// 匿名对象
+	// 在这种没有用任何对象接收时，该对象为匿名对象，生命周期为末尾分号，当分号执行结束时即发生析构
+	
+	
+// 继承
+用delete销毁该基类对象时，如果该基类的析构函数不是虚析构函数，且该基类的继承顺序在第一个，如上面的Worker类，（class ChildLabourer :public Worker,
+public Children）那么delete 父类的时候只会调用父类Worker的析构函数，系统不会出错，但是如果继承的时候顺序不是在第一位(class ChildLabourer :public 
+Children,public Worker)，就会报内存泄露的错误，如果父类的析构函数是虚析构函数，那么销毁的时候会先调用子类的析构函数再调用所有父类的析构函数，注意，
+此时，子类的父类的析构函数都会被调用！！！
+
+
+// ++i和i++
+由于++i为直接在原变量上加一，而i++需要产生一个临时变量，故++i效率比i++要高
+但现在编译器会把普通的内置类型的i++优化为++i，所以两个效率并没有区别
+但如果i为复杂的类类型的迭代器，编译器没法优化，故++i比i++效率要高
+综上，能使用++i就不使用i++
+
+

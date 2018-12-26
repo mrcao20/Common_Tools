@@ -1,0 +1,30 @@
+// 让图片变暗
+图片变暗就是让rgb通道的像素以同样的幅度减小（delta）
+for (int x = 0; x<newImage.width(); x++) {
+	for (int y = 0; y<newImage.height(); y++) {
+		oldColor = QColor(image.pixel(x, y));
+
+		r = oldColor.red() + delta;
+		g = oldColor.green() + delta;
+		b = oldColor.blue() + delta;
+
+		//we check if the new values are between 0 and 255  
+		r = qBound(0, r, 255);
+		g = qBound(0, g, 255);
+		b = qBound(0, b, 255);
+
+		newImage.setPixel(x, y, qRgb(r, g, b));
+	}
+}
+
+// QLabel中QPixmap
+要时label中的QPixmap保持纵横比的情况下显示全部的图片，可使用以下方法
+QPixmap p;
+int w = label->width();
+int h = label->height();
+label->setPixmap(p.scaled(w,h,Qt::KeepAspectRatio));
+
+// QPixmap和QImage中的scaled方法
+scaled方法是返回一个经过缩放的图片，而不是在原图片上更改，所以要实现保持纵横比显示图片需要重新接收scaled返回的变量
+image = image.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+然后再调用QPixmap p = QPixmap::fromImage(image);即可

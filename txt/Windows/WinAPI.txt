@@ -1,0 +1,83 @@
+// 强制类型转换
+转换时应该用该类型的简写，比如LPCWSTR应该写为L
+L的实际意思将L后的字符串转换为Unicode编码格式
+
+// Windows API函数编码问题
+windows API函数通常有两个版本，函数名A和函数名W，比如FindWindowA和FindWindowW，后缀为A的，是参数编码为普通格式，传参时可直接传char *；后缀为W的，
+参数编码格式为宽字符格式，传参时需要用L"字符串"等将字符串转换为宽字符格式后再传入。
+没有后缀的为宏定义，比如FindWindow，通常情况下会根据平台编码格式自动转换，但使用时也可以直接调用原函数，FindWindowA或FindWindowW
+
+// 窗口置顶（将窗口设置为第一窗口）
+HWND hWnd = FindWindow(NULL, L"ScreenLock"); //通过窗口名获得窗口句柄
+SwitchToThisWindow(hWnd, TRUE); //将该窗口句柄置为顶层窗口，第二个参数为当该窗口被最小化时，将其复原
+FindWindow第一个参数为窗口类名，可以置空，第二个参数为LPCWSTR类型，强制转换时不应该用（LPCWSTR）字符串，应该用L字符串
+
+// Windows消息机制
+当系统将要关机时，Windows将会向每一个应用发送WM_QUERYENDSESSION消息，可以用nCode接收
+将系统将要休眠时，Windows将会向每一个应用发送WM_POWERBROADCAST消息，可以用nCode接收，而wParam会等于PBT_APMQUERYSUSPEND，如果是从休眠唤醒，wParam将会等于PBT_APMRESUMEAUTOMATIC
+
+// 获取桌面上第一个窗口句柄
+HWND hWnd = GetForegroundWindow();
+
+// 将窗口设置为第一窗口
+SetForegroundWindow(hWnd); // 可以获取输入焦点(false)
+
+// 显示隐藏到系统托盘的窗口
+ShowWindow(hWnd, SW_SHOW);
+
+// 获取窗口句柄的Title    // 此处长度必须加1，new出来的字符数组包含一个结束符，实际大小为length-1，所以此处需要使用length+1
+int length = GetWindowTextLength(hWnd);
+char *WindowTitle = new char[length + 1];
+GetWindowText(hWnd, WindowTitle, length + 1);
+
+// 将lParam转化为vkCode
+PKBDLLHOOKSTRUCT LowKey
+LowKey = (PKBDLLHOOKSTRUCT)lParam;
+
+// 将lParam转化为message
+PCWPSTRUCT msg;
+msg = (PCWPSTRUCT)lParam;
+
+
+// 检测某一服务是否正在运行
+#include <Windows.h>
+#include  <Winsvc.h>
+
+inline bool IsSvcRun(LPCTSTR lpszSvcName)
+{
+	SERVICE_STATUS svcStatus = { 0 };
+	return QueryServiceStatus(OpenService(OpenSCManager(NULL, NULL, GENERIC_READ), lpszSvcName, GENERIC_READ), &svcStatus) ? (svcStatus.dwCurrentState == SERVICE_RUNNING) : false;
+}
+
+
+// 启动服务
+BOOL StartServiceA(
+    _In_            SC_HANDLE            hService,                   //服务句柄
+    _In_            DWORD                dwNumServiceArgs,           //参数的个数   //argc 
+    _In_reads_opt_(dwNumServiceArgs)
+                    LPCSTR             *lpServiceArgVectors          //参数列表指针  //argv
+    );
+void startSvc(LPSTR szServiceName) {
+	SC_HANDLE schService;
+	schService = OpenServiceA(OpenSCManagerA(NULL, NULL, GENERIC_READ), szServiceName, SERVICE_ALL_ACCESS);
+	if (!schService) {
+		printf("mysql service not found\n");
+		fflush(stdout);
+		return;
+	}
+	SERVICE_STATUS svcStatus = { 0 };
+	QueryServiceStatus(schService, &svcStatus);
+	if (svcStatus.dwCurrentState == SERVICE_RUNNING) {
+		CloseServiceHandle(schService);
+		return;
+	}
+	bool ret = StartServiceA(schService, 0, NULL);
+	CloseServiceHandle(schService);
+	if (!ret) {
+		printf("Service start failed(%d)\n", GetLastError());
+		fflush(stdout);
+		return;
+	}
+}
+	
+

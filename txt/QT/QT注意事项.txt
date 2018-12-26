@@ -1,0 +1,163 @@
+//窗体状态
+setAttribute(Qt::WA_TranslucentBackground, true); //背景透明
+setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::SubWindow); //去除边框 //SubWindow
+setStyleSheet("background-color:rgba(255, 255, 255, 0)");  // 改变窗体透明度，当值为0时，若改变的是QWidget主窗体，则背景为黑色，
+需先使用setAttribute(Qt::WA_TranslucentBackground, true);将窗口透明，再设置透明度
+
+
+// 获取桌面大小
+QApplication::desktop()->screenGeometry();
+
+QStringList中at函数取出数据的速度最快，但是取出的数据为只读数据
+
+// 父子类关系和自动父类
+1.当使用布局管理器时，布局管理器QLayout中的部件无需指定父类，当布局管理器被应用到QWidget中后，布局管理器和内的所有部件将自动指定父类为QWidget
+2.使用QObject中的add函数时，如果add的参数已经被实例化，那么该参数需在实例化时指定父类，如果add的参数未被实例化而是该Object自动实例化，那么该参
+数的父类就是该Object
+
+Service													Protocol Number
+Internet Control Message Protocol (ICMP)				1
+Transmission Control Protocol (TCP)						6
+User Datagram Protocol (UDP)							17
+General Routing Encapsulation (PPTP data over GRE)		47
+
+// QScopedPointer
+QScopedPointer在其生命期结束后会自动删除它所指的对象。
+用法：QScopedPointer<类型> 变量名。当需要new一个对象时，调用reset函数，以删除以前的对象，重新创建一个对象，当reset函数参数为空时，表示删除原有对象。
+使用QScopedPointer时，把QScopedPointer声明为栈内存对象，当QScopedPointer析构时不需要手动delete存放在里面的对象，它会自动delete
+
+// 字符编码
+头文件中加入这行命令即可将本文件中的字符编码为utf-8
+#pragma execution_character_set("utf-8")
+
+// 删除对象
+当由一个对象发出信号删除它自身时，在删除此对象的函数内不要立即删除，这有可能会出错，应当先创建一个计时器，等待些许时间后再讲该对象和计时器一起删除
+
+
+// 获取鼠标位置
+QCursor::pos(); //获取的位置为鼠标的全局位置
+QMouseEvent *event; event->pos(); 获取的是鼠标的局部位置；event->globalPos(); 获取是鼠标的全局位置
+
+// 获取随机数
+qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
+int num = qrand() % count;
+（这里这两句不需要连着，qsrand可以在程序初始化时调用，qrand在需要产生随机数时调用）
+qsrand为此次产生随机数播下一个种子，如果每次播的种子相同，比如不调用qsrand时，系统自动播下值为1的种子，此时程序每次运行时产生的随机数将会一样，
+所以需要在每次程序运行时播下不同的种子，可以用当前时间来播种，因为通常情况下每次程序运行时的时间都不一样，这时每次程序运行时产生的随机数都不一样
+，qsrand只需在程序初始化时调用一次即可，因为一旦调用，之后就会产生随机数，如果每次获取随机数时都调用一次，不仅会降低程序性能，还会影响之后产生的
+随机数。
+
+
+// 字符串的拼接
+QString可以自动的对占用内存空间进行扩充，这种连接操作是很迅速的
+故在使用字符串的拼接时，可以直接使用+，+=， append等操作
+
+
+// 获取当前路径
+qApp->applicationDirPath()
+
+// QVariant
+QVariant行为类似于C/C++的union, 但在Qt中比union强大很多, QVariant内置支持所有QMetaType::Type里的类型如:int,QString,QFont等甚至QList<QVariant>,
+QMap<QString, QVariant>等组成的任意复杂类型. 主要应该在Qt项中附带额外的数据,如setData(),setItemData()等,和数据序列化中.简单的说QVariant可存储任意类型.
+需要注意canConvert返回true不一定转化就能成功, 如QVariant存储的是QString类型,QString是可以转化为int的所以必定会返回true,但如果QString不是一个纯数字
+那v.toInt(&ok), ok就是false; 上面中v的ok返回true,而v1的返回false.如不能转换铡返回相应值的默认值.
+QVariant以及QVariant已支持的诸如QList, QImage, QString, QMap, QHash等各类型都支持隐式共享、写时复制(copy on write)和引用计数(reference counting)
+这意味着，通过值对它们复制、传递和返回的代价要相对低些。
+
+
+// QTableWidget
+setShowGrid(false) 隐藏网格线
+setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);//去掉水平滚动条
+setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);//垂直滚动条按每像素移动
+setAutoScroll(false);//去掉自动滚动
+
+// QFileIconProvider
+icon函数可根据QFileInfo获取系统图标
+
+// QMap和QHash
+（1）Qt中提供了用于存储键值对的类模板
+
+（2）QHash和QMap遵循相同的使用接口；
+
+（3）QHash的查找速度快于QMap；
+
+（4）QMap需要的内存空间低于QHash；
+
+（5）QHash对于Key类型的要求高于QMap。（QHash要求key类型操作两个操作符函数）
+
+
+// 获取命令行参数
+const QStringList args = QCoreApplication::arguments();   // 获取所有命令行的参数
+for (const QString &arg : args.mid(1)) {  // 第零个参数为文件路径，所以从第一个参数开始获取
+	if (!arg.startsWith(QLatin1Char('-')))   // -/--开头的参数为指定参数名称的参数
+		return arg;
+}
+
+
+// QListWidget
+QAbstractItemView::ContiguousSelection	 // 当按住Ctrl或Shift时，将选择点击的两项之间的所有项
+QAbstractItemView::MultiSelection     // 只要鼠标点击过的项，均被选择
+QAbstractItemView::ExtendedSelection    // 按住Shift时，选择点击的两项之间的所有项，按住Ctrl时，选择所有点击的项
+删除部件有两种方法，takeItem(指定的行)，removeItemWidget(指定的item)，两种方法删除的item都只是将item从QListWidget中移除，之后还需手动delete
+
+
+// QMessageBox
+int ret = QMessageBox::warning(this, "Confirm delete",
+			"are you sure?",
+			QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+if (ret == QMessageBox::No) {
+	return;
+}
+
+
+// console输出重定向
+qDebug() 向控制台输出时，会将"等字符加\进行转义，而使用std::cout时，如果从QString转换为char *时字符串为UTF-8编码，则会造成乱码，可以使用
+QTextStream来将stdout重定向，这样可以在输出时不会对"加\转义而影响阅读，而且还能输出QString而不用转换为char *而造成乱码
+QTextStream cout(stdout);
+QTextStream cin(stdin);
+QTextStream cerr(stderr);
+
+
+// 虚函数virtual
+当基类中存在至少一个虚函数时，就必须将析构函数也定义为虚函数，因为有可能会存在父类对象析构子类对象。
+
+
+// QProcess
+start开启的进程为当前进程的子进程，子进程会随着父进程的终止而终止
+startDetached开启的进程为一个独立的进程，它不会随父进程的终止而终止
+
+
+// 多线程与用户界面交互
+不能使用线程修改用户界面
+当存在多个线程均会操作到用户界面时，不能使用每个线程单独操作界面，应发出信号，使用固定函数来修改，也不能用lambda表达式接收信号，槽函数必须
+为实名函数
+
+
+// char*类型与其他字符串类型的转化
+由于C++字符串char*类型是以空格结尾，故如果字符串中包含空格(ASCII码为0)时，在转化为其他字符串时，会直接从第一个空格处截断，故在转化时需指明长度
+比如string类型字符串中包含空格，在转化为QByteArray时需要先用string.c_str()转化为char*类型，这时再转化为QByteArray时需要指明长度string.size()
+
+
+// 信号或槽的重载(QOverload)
+QOverload<const QString &, const QString &>::of(&Input::createShortcut)
+尖括号内参数为指定函数的参数，格式必须完全一致，括号内参数为指定函数的指针
+c++14以上：
+	qOverload<const QString &, const QString &>(&Input::createShortcut)
+
+
+// QLayout的add函数(addItem/addWidget)
+QT:Note: The ownership of item is transferred to the layout, and it's the layout's responsibility to delete it.
+一旦将部件add进layout之中，当layout被删除时，该部件也会被删除，故只要把部件添加进布局管理器，亦不需要负责删除部件，只需删除布局
+
+
+// QTabWidget的addTab函数
+QT:Ownership of page is passed on to the QTabWidget.
+将Widget添加进TabWidget之中后，widget的所有权将传递给tabWidget，tabWidget将负责该Widget删除
+tabWidget没有take函数，只有remove函数，但remove之后，widget并不会被删除，需要手动删除
+
+
+// setIndexWidget/setItemWidget
+使用此函数设置的Widget可以不设置父类，widget的所有权会被转移至view
+如果在此之前设置过一个Widget，直接重新设置Widget，原Widget会被自动delete
+
+

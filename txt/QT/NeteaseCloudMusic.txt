@@ -1,0 +1,38 @@
+// 搜索歌曲
+http://s.music.163.com/search/get/?version=1&type=1&s=%E6%9C%AA%E9%97%BB%E8%8A%B1%E5%90%8D&limit=10&offset=0
+（s搜索内容，歌名专辑等；limit搜索结果上限，offset显示的页数）
+// post请求
+http://music.163.com/api/search/get
+（参数s=心做&type=1&offset=0&total=true&limit=10）
+
+
+// 歌曲链接
+http://music.163.com/song/media/outer/url?id=510084710
+（id为搜索歌曲获得的id）
+
+
+// 搜索歌词
+http://music.163.com/api/song/lyric?os=pc&id=93920&lv=-1&kv=-1&tv=-1
+（id：歌曲ID）
+
+
+// 歌曲信息
+http://music.163.com/api/song/detail/?id=510084710&ids=[510084710]
+（id为歌曲id，ids为[id]）
+
+
+// 加密算法
+modulus = '00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7'
+nonce = '0CoJUm6Qyw8W8jud'
+pubKey = '010001'
+FFFFFFFFFFFFFFFF=257348aecb5e556c066de214e531faadd1c55d814f9be95fd06d6bff9f4c7a41f831f6394d5a3fd2e3881736d94a02ca919d952872e7d0a50ebfa1769a7a62d512f5f1ca21aec60bc3819a9c3ffca5eca9a0dba6d6f7249b06f5965ecfff3695b54e1c28f3f624750ed39e7de08fc8493242e26dbc4484a01c76f739e135637c
+获取歌曲链接的方法：
+将连接https://music.163.com/weapi/song/enhance/player/url和参数params=param&encSecKey=encSecKey通过post方式请求即可
+参数param为先将参数{\"ids\":\"[id]\",\"br\":128000,\"csrf_token\":\"\"}通过秘钥nonce AES加密后BASE64编码再与客户端随机生成的秘钥加密BASE64编码
+参数encSecKey为上述客户端随机生成的秘钥与modulus和pubKey RSA加密
+客户端生成的秘钥可固定为FFFFFFFFFFFFFFFF
+AES加密的具体算法为: AES-128-CBC，输出格式为 base64 
+AES加密时需要指定 iv：0102030405060708 
+AES加密时需要 padding（C++需要手动指定，Java模块中自动包含）
+
+

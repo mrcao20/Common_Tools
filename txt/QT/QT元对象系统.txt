@@ -1,0 +1,40 @@
+// QT反射机制
+QT可以在外部调用对象的私有函数，类似于JAVA中的反射。比如调用QTimer的timeout函数
+QMetaObject::invokeMethod(timer, "timeout", Q_ARG(QString, str)); // 第一个参数为对象，第二个参数为调用的函数，第三个参数及以后的参数为调用函数
+的参数，均用Q_ARG(参数类型，参数值)的形式
+这个函数还有另一个重载版本，第三个参数为调用方式，若未指定，则为AutoConnection(发射者和接收者处于同一线程时为同步调用，否则为异步)，或者手动指定
+DirectConnection（同步调用），QueuedConnection（异步调用）
+Q_DECLARE_METATYPE
+	如果要使自定义类型或其他非QMetaType内置类型在QVaiant中使用，必须使用该宏。
+	该类型必须有公有的 构造、析构、复制构造 函数
+qRegisterMetaType 必须使用该函数的两种情况
+	如果非QMetaType内置类型要在 Qt 的属性系统中使用
+	如果非QMetaType内置类型要在 queued 信号与槽 中使用
+当调用无参的qRegisterMetaType函数时，模板参数T必须用 Q_DECLARE_METATYPE() 声明过
+当无需使用QVaiant时，则无需使用Q_DECLARE_METATYPE()声明，只需调用有参版本qRegisterMetaType< TYPE >(#TYPE);
+类反射(使用反射实例化对象时，必须在构造函数前加Q_INVOKABLE)
+	// qRegisterMetaType<type>("type");   // 可以得到对象的QMetaTypeId
+	qRegisterMetaType<type *>("type");	// 这里注册时尖括号里的类型应为指针，这是由于之后的实例化出的类型为指针，括号里的字符串表示之后实例化时用
+	此字符串代表这个指针类型进而实例化
+	const QMetaObject *metaObj = QMetaType::metaObjectForType(QMetaType::type("type"));			// QMetaType::type函数返回对象的QMetaTypeId
+	type *item = qobject_cast<type*>(metaObj->newInstance());
+当获取了对象的QMetaTypeId后，可以使用QMetaType::construct()(create)函数实例化对象
+	void *p = QMetaType::construct(QMetaTypeId);
+这里QMetaType::construct函数返回的类型为void *，应该用reinterpret_cast<type *>(p);将其强制转换为type *类型
+	
+	
+// Q_PROPERTY()宏
+定义格式
+Q_PROPERTY(type name
+           READ getFunction
+           [WRITE setFunction]
+           [RESET resetFunction]
+           [DESIGNABLE bool]
+           [SCRIPTABLE bool]
+           [STORED bool])
+使用了该宏的属性，可以使用setProperty("属性名", 值)来调用WRITE后的函数，可以用property("属性名")来调用READ后的函数，也即是可以使用元对象系统来操作
+对象的属性
+这里的属性名和对象本身的属性名没有关系，在调用时，使用的是这里的属性名，然后调用其后的函数，函数内使用的属性为对象本身的属性，这里属性名的定义通常
+情况下为去掉对象属性的前缀，即对象属性为m_name，则这里的属性名为name
+
+

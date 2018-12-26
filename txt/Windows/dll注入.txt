@@ -1,0 +1,41 @@
+// DLL注入
+1.HOOK注入
+在需要注入的dll中创建一个鼠标或键盘钩子(不做任何事即可)，先使用测试进程创建钩子，然后在目标进程中响应鼠标或键盘事件
+2.CreateRemoteThread注入(注入时dll路径为全路径)(使用前最好先提升本进程权限为Debug权限)
+BOOL InjectDll(DWORD dwProcessID, char* dllPath) {//参数：目标进程ID、DLL路径
+	FARPROC FuncAddr = NULL;
+	HMODULE hdll = LoadLibrary(TEXT("Kernel32.dll"));//加载DLL
+	if (hdll != NULL) {
+		FuncAddr = GetProcAddress(hdll, "LoadLibraryA");//获取LoadLibraryA函数地址
+		if (FuncAddr == NULL)return FALSE;
+	}
+
+	HANDLE hProcess = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ | PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION, FALSE, dwProcessID);//获取进程句柄
+	if (hProcess == NULL)return FALSE;
+	SIZE_T dwSize = strlen(dllPath) + 1;
+	LPVOID RemoteBuf = VirtualAllocEx(hProcess, NULL, dwSize, MEM_COMMIT, PAGE_READWRITE);//远程申请内存
+	SIZE_T dwRealSize;
+	if (WriteProcessMemory(hProcess, RemoteBuf, dllPath, dwSize, &dwRealSize))//远程写内存
+	{
+		DWORD dwThreadId;
+		HANDLE hRemoteThread = CreateRemoteThread(hProcess, 0, 0, (LPTHREAD_START_ROUTINE)FuncAddr, RemoteBuf, 0, &dwThreadId);//创建远程线程
+		if (hRemoteThread == NULL)
+		{
+			VirtualFreeEx(hProcess, RemoteBuf, dwSize, MEM_COMMIT);
+			CloseHandle(hProcess);
+			return FALSE;
+		}
+		//释放资源
+		WaitForSingleObject(hRemoteThread, INFINITE);
+		CloseHandle(hRemoteThread);
+		VirtualFreeEx(hProcess, RemoteBuf, dwSize, MEM_COMMIT);
+		CloseHandle(hProcess);
+		return TRUE;
+	}
+	else
+	{
+		VirtualFreeEx(hProcess, RemoteBuf, dwSize, MEM_COMMIT);
+		CloseHandle(hProcess);
+		return FALSE;
+	}
+}

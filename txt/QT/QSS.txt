@@ -1,0 +1,5 @@
+// QListView
+outline item选中时的边框虚线
+border: 2px outset red;	outset item的边框
+
+

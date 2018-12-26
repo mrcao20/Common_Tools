@@ -1,0 +1,39 @@
+#pragma once
+
+/**
+在java语言中，可以使用getObject(String)函数，从类型直接构建新的对象。
+而在C++中是没有这种机制的，Qt虽然提供了元对象机制，但只可以获取对象的类名，不能反向构建。
+*/
+
+#include <QByteArray>
+#include <QMetaObject>
+#include <QHash>
+
+class ObjectFactory {
+
+public:
+	template<typename T>
+	static void registerClass() {
+		constructors().insert(T::staticMetaObject.className(), &constructorHelper<T>);
+	}
+
+	static QObject* createObject(const QByteArray& className, QObject* parent = NULL) {
+		Constructor constructor = constructors().value(className);
+		if (constructor == NULL)
+			return NULL;
+		return (*constructor)(parent);
+	}
+
+private:
+	typedef QObject* (*Constructor)(QObject* parent);
+
+	template<typename T>
+	static QObject* constructorHelper(QObject* parent) {
+		return new T(parent);
+	}
+
+	static QHash<QByteArray, Constructor>& constructors() {
+		static QHash<QByteArray, Constructor> instance;
+		return instance;
+	}
+};

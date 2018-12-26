@@ -1,0 +1,11 @@
+完善背景透明(AI)							1
+实现图片截图和屏幕截图(AI)
+重构音乐播放器
+爬取bilibili视频(MyVideoPlayer)
+实现简单画图以及处理(AI)					1
+加入缓冲机制，实现直接播放和缓冲播放两种功能(MyVideoPlayer)			1
+取消手动布局，使用designer布局(MyVideoPlayer)			1
+增加图像修补，饱和度、对比度调节等图像处理工具(AI)		2
+使用元对象系统再次调整命令输入(AI)
+重构output类，使其适应更多环境				1
+完善钩子dll，让ctrl和alt可以同时检测		1

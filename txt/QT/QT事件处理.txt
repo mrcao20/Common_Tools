@@ -1,0 +1,44 @@
+// eventFilter
+eventFilter可以响应子Widget的目标点击事件，需要调用子Widget的installEventFilter函数来安装事件过滤器
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)  
+{  
+    if (obj == ui->label)//指定某个QLabel  
+    {  
+        if (event->type() == QEvent::MouseButtonPress)//mouse button pressed  
+        {  
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);  
+            if(mouseEvent->button() == Qt::LeftButton)  
+            {  
+                QMessageBox::information(NULL,"点击","点击了我",  
+                                         QMessageBox::Yes|QMessageBox::No,QMessageBox::Yes);  
+                return true;  
+            }  
+            else  
+            {  
+                return false;  
+            }  
+        }  
+        else  
+        {  
+            return false;  
+        }  
+    }  
+    else  
+    {  
+        // pass the event on to the parent class  
+        return QMainWindow::eventFilter(obj, event);  
+    }  
+}  
+
+
+// 等待执行结束
+当对象没有waitForFinished函数时，可以使用QEventLoop时间循环类，当对象执行结束时，连接到QEventLoopquit槽，即可等待结束
+QEventLoop loop;
+connect(p, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+loop.exec();
+
+
+// closeEvent等可重写的事件处理函数
+这一系列函数只是用作这个事件将被处理之前的预处理操作，并不影响这个事件被处理，若要停止此事件，则只需调用ignore函数，表示此事件将被忽略不处理
+
+

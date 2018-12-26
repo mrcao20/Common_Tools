@@ -1,0 +1,8 @@
+// 修改AUTO_INCREMENT(自增主码)字段的起始值
+// MySQL
+alter table t_playlistinfo auto_increment=1;
+(如果修改的值小于当前最大值，则操作不会生效，也不会报错，下一次插入操作的值是修改的值的下一个值)
+// SQLite
+UPDATE sqlite_sequence SET seq = %1 WHERE name = '%2';
+
+

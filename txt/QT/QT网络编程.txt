@@ -1,0 +1,23 @@
+// 断点续传
+在QNetworkRequest的请求头setRawHeader中加入Range头，然后指定需要下载的范围
+setRawHeader("Range","bytes=500-")
+第二个参数表示方式
+	表示头500个字节：bytes=0-499 
+　　表示第二个500字节：bytes=500-999 
+　　表示最后500个字节：bytes=-500 
+　　表示500字节以后的范围：bytes=500- 
+　　第一个和最后一个字节：bytes=0-0,-1 
+　　同时指定几个范围：bytes=500-600,601-999
+
+// QWebEngineDownloadItem
+path()函数的返回值为操作系统默认的存储位置和默认文件名，使用时可直接传给getSaveFileName保存，也可以使用QFileInfo的fileName获取文件名自行设置文件
+路径。当文件未下载完成时，系统中保存的文件名为path()的返回值加上.download
+
+
+// Get和Post请求
+当使用get请求时，直接将参数用?连接在URL后面，参数之间用&隔开
+当使用post请求时，请求头设置的URL将去掉?后面的参数，将参数用QByteArray存储QByteArray post_data; post_data.append("s=心做&");前面参数最后一个字符
+加上&，最后一个参数不加 post_data.append("type=1");，将请求头设置为request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+request.setHeader(QNetworkRequest::ContentLengthHeader, post_data.length());，请求时，将post_data当做第二个参数传入post
+
+
