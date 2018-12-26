@@ -21,7 +21,7 @@ std::string McDeviceInfo::getCpuId() {
 std::string McDeviceInfo::getVolumeInfo(char *rootPathName) {
 	DWORD volumeSerialNumber;	// ÐòÁÐºÅ
 	char volumeName[256];	// ÅÌ·ûÃû
-	GetVolumeInformationA("c:\\ ", volumeName, 12, &volumeSerialNumber, NULL, NULL, NULL, 10);
+	GetVolumeInformationA(rootPathName, volumeName, 12, &volumeSerialNumber, NULL, NULL, NULL, 10);
 
 	//return QByteArray::number((quint32)volumeSerialNumber, 16).toStdString();
 	char temp[100];
