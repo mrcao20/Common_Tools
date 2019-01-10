@@ -1,0 +1,36 @@
+// Java
+在Java中，在构造函数内可以调用其他构造函数，但只能通过this指针调用，并且必须放在第一位调用，且只能调用一次
+public class Neeke{
+    int age = 0;
+    String name = "";
+    Neeke(int a){
+        age = a;
+    }
+    Neeke(String n){
+        name = n;
+    }
+    Neeke(int a, String n){
+        this(a);
+        this.name = n;
+    }
+}
+
+
+// C++
+C++不能直接通过类名调用其他构造函数(会产生一个临时的对象，本对象并不会被成功赋值)，可以通过placement new调用
+inline void *__cdecl operator new(size_t, void *_P) {
+    return (_P); 
+}
+
+struct CLS {
+    int m_i;
+    CLS( int i ) : m_i(i){}
+    CLS() {
+        new (this)CLS(0);
+    }
+};
+ 
+对象的构造顺序：基类构造函数、对象成员构造函数、派生类本身的构造函数 
+析构顺序：派生类本身的析构函数、对象成员析构函数、基类析构函数（与构造顺序正好相反） 
+
+
