@@ -161,3 +161,27 @@ tabWidget没有take函数，只有remove函数，但remove之后，widget并不�
 如果在此之前设置过一个Widget，直接重新设置Widget，原Widget会被自动delete
 
 
+// C++各种for循环的测试(https://www.cnblogs.com/diysoul/p/7096795.html)
+// vector<int> 100 * 1000 * 1000 times, debug & release:
+// normalForLoop use time: 1096 ms                   normalForLoop use time: 113 ms
+// normalForLoopCallSizeOnce use time: 926 ms        normalForLoopCallSizeOnce use time: 106 ms
+// iterator use time: 1941 ms                        iterator use time: 103 ms
+// iteratorCallCEndOnce use time: 1473 ms            iteratorCallCEndOnce use time: 101 ms
+// qtForeach use time: 1846 ms                       qtForeach use time: 262 ms
+// stdForeach use time: 1488 ms                      stdForeach use time: 120 ms
+// rangeForLoop use time: 1527 ms                    rangeForLoop use time: 101 ms
+// rangeForLoopReference use time: 1551 ms           rangeForLoopReference use time: 102 ms
+
+// list<double> 10 * 1000 * 1000 times, debug & release:
+// iterator use time: 206 ms                         iterator use time: 27 ms
+// iteratorCallCEndOnce use time: 183 ms             iteratorCallCEndOnce use time: 26 ms
+// qtForeach use time: 1493 ms                       qtForeach use time: 743 ms
+// stdForeach use time: 182 ms                       stdForeach use time: 27 ms
+// rangeForLoop use time: 186 ms                     rangeForLoop use time: 26 ms
+// rangeForLoopReference use time: 186 ms            rangeForLoopReference use time: 27 ms
+
+vector支持随机访问,但无通用性,当采用list后,就不能再使用了,不可取.
+迭代器与范围for循环所用时间无明显差异, qt提供的foreach显然是最差的方法, std算法for_each也还可以接受, 但范围for循环好看得多, 更好用啊!
+在循环中调用调用cend方法,会频繁创建一个新的迭代器(不停的构造与析构),另外还有函数调用开销,在debug版本结果来看似乎确实有一定的影响,但在realease版本下所花时间几乎相等,也许编译器有优化吧!
+
+
