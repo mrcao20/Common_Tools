@@ -16,23 +16,27 @@ struct TypeList<> {};
 template <typename T>
 struct TypeListForeach {
     template<typename Func>
-    static void execute(const Func &func) {
-        func.template operator()<T>();
+    static bool execute(const Func &func) {
+        return func.template operator()<T>();
     }
 };
 template <typename... T>
 struct TypeListForeach<TypeList<T...>> {
     template<typename Func>
-    static void execute(const Func &func) {
+    static bool execute(const Func &func) {
         typedef TypeList<T...> List;
-        TypeListForeach<typename List::Head>::execute(func);
-        TypeListForeach<typename List::Tails>::execute(func);
+        if(TypeListForeach<typename List::Head>::execute(func))
+            return true;
+        if(TypeListForeach<typename List::Tails>::execute(func))
+            return true;
+        return false;
     }
 };
 template <>
 struct TypeListForeach<TypeList<>> {
     template<typename Func>
-    static void execute(const Func &) {
+    static bool execute(const Func &) {
+        return false;
     }
 };
 /************************************/
@@ -49,7 +53,7 @@ struct TypeListForeach<TypeList<>> {
 #define MC_TYPELIST_FOREACH_HELPER(Class)   \
     struct MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class) {    \
         template<typename T>    \
-        void operator()() const {
+        bool operator()() const {
 
 #define MC_TYPELIST_FOREACH_HELPER_END()    \
         }   \
@@ -63,7 +67,7 @@ struct TypeListForeach<TypeList<>> {
     public: \
         MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class)(C *ptr) : d(ptr){}    \
         template<typename T>    \
-        void operator()() const {
+        bool operator()() const {
 
 #define MC_TYPELIST_FOREACH_TEMPLATE_HELPER_FRIEND(Class) \
     template<typename T> \
