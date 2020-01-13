@@ -1,3 +1,5 @@
+#pragma once
+
 /************************************/
 // TypeList的C++11实现方式
 template <typename...> struct TypeList;
@@ -64,5 +66,5 @@ struct TypeListForeach<TypeList<>> {
         void operator()() const {
 
 #define MC_TYPELIST_FOREACH_TEMPLATE_HELPER_FRIEND(Class) \
-    template<T> \
+    template<typename T> \
     friend struct MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class);
