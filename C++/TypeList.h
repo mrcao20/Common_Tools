@@ -16,14 +16,14 @@ struct TypeList<> {};
 template <typename T>
 struct TypeListForeach {
     template<typename Func>
-    static bool execute(const Func &func) {
+    static bool execute(const Func &func) noexcept {
         return func.template operator()<T>();
     }
 };
 template <typename... T>
 struct TypeListForeach<TypeList<T...>> {
     template<typename Func>
-    static bool execute(const Func &func) {
+    static bool execute(const Func &func) noexcept {
         typedef TypeList<T...> List;
         if(TypeListForeach<typename List::Head>::execute(func))
             return true;
@@ -35,7 +35,7 @@ struct TypeListForeach<TypeList<T...>> {
 template <>
 struct TypeListForeach<TypeList<>> {
     template<typename Func>
-    static bool execute(const Func &) {
+    static bool execute(const Func &) noexcept {
         return false;
     }
 };
@@ -47,13 +47,16 @@ struct TypeListForeach<TypeList<>> {
 #define MC_TYPELIST_FOREACH_HELPER_CLASS(Class) \
     MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class)()
 
+#define MC_TYPELIST_FOREACH_TEMPLATE_HELPER_CLASS_IMPL(HelperClass, Class, ptr) \
+    MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(HelperClass)<Class>(ptr)
+
 #define MC_TYPELIST_FOREACH_TEMPLATE_HELPER_CLASS(Class) \
-    MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class)<std::remove_pointer<decltype(this)>::type>(this)
+    MC_TYPELIST_FOREACH_TEMPLATE_HELPER_CLASS_IMPL(Class, std::remove_pointer<decltype(this)>::type, this)
 
 #define MC_TYPELIST_FOREACH_HELPER(Class)   \
     struct MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class) {    \
         template<typename T>    \
-        bool operator()() const {
+        bool operator()() const noexcept {
 
 #define MC_TYPELIST_FOREACH_HELPER_END()    \
         }   \
@@ -63,11 +66,12 @@ struct TypeListForeach<TypeList<>> {
     template<typename C>    \
     struct MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class) {    \
     private:    \
-        C *d;    \
+        C *__d__;    \
     public: \
-        MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class)(C *ptr) : d(ptr){}    \
+        MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class)(C *ptr) : __d__(ptr){}    \
+        C *d_ptr() const noexcept {return __d__;}   \
         template<typename T>    \
-        bool operator()() const {
+        bool operator()() const noexcept {
 
 #define MC_TYPELIST_FOREACH_TEMPLATE_HELPER_FRIEND(Class) \
     template<typename T> \
