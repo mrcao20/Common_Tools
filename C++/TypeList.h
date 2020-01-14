@@ -47,11 +47,8 @@ struct TypeListForeach<TypeList<>> {
 #define MC_TYPELIST_FOREACH_HELPER_CLASS(Class) \
     MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class)()
 
-#define MC_TYPELIST_FOREACH_TEMPLATE_HELPER_CLASS_IMPL(HelperClass, Class) \
-    MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(HelperClass)<Class>(this)
-
 #define MC_TYPELIST_FOREACH_TEMPLATE_HELPER_CLASS(Class) \
-    MC_TYPELIST_FOREACH_TEMPLATE_HELPER_CLASS_IMPL(Class, Class)
+    MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class)<std::remove_pointer<decltype(this)>::type>(this)
 
 #define MC_TYPELIST_FOREACH_HELPER(Class)   \
     struct MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class) {    \
