@@ -76,3 +76,10 @@ struct TypeListForeach<TypeList<>> {
 #define MC_TYPELIST_FOREACH_TEMPLATE_HELPER_FRIEND(Class) \
     template<typename T> \
     friend struct MC_TYPELIST_FOREACH_HELPER_CLASS_NAME(Class);
+
+#define MC_TYPELIST_FOREACH_IMPL(TypeList, HelperClass, Class, ptr)  \
+    TypeListForeach<TypeList>::execute(MC_TYPELIST_FOREACH_TEMPLATE_HELPER_CLASS_IMPL(HelperClass, Class, ptr));
+
+#define MC_TYPELIST_FOREACH(TypeList, Class)  \
+    MC_TYPELIST_FOREACH_IMPL(TypeList, Class, std::remove_pointer<decltype(this)>::type, this)
+    
